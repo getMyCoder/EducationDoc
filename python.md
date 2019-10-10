@@ -743,6 +743,7 @@
 			pass
 		</pre>
 	- 构造函数是在实例化的时候自动执行的
+	- 构造函数内部不能直接访问类内部构造函数外部的变量，但是可以方位类的外部的变量
 - 继承
 	- 继承
 		- 子类可以使用父类的内容和行为
@@ -1040,6 +1041,44 @@
 		- getattr获取成员对象
 		- delattr删除成员对象
 		- dir获取对象的成员列表
+	- 类的成员检测符
+		- 类的成员属性就是对类的某些属性进行一定的操作
+			<pre>
+			class Student():
+			    name='张三'
+			    def __init__(self):
+			        self.setName()
+			    def setName(self):
+			        print(self.name)
+			s=Student()
+			</pre>
+			- 简单讲就是在构造函数中执行对某些属性操作的方法
+			- get获取属性的操作
+			- set修改或是添加属性的操作
+			- delete删除属性操作
+		- 使用类的成员描述符
+			- 使用类实行
+			- 类的属性
+			- 使用property函数
+				- property(fget,fset,fdel,doc)
+				- 使用方法
+				<pre>
+				class Person():
+				    def fget(self):
+				        print('this is fget',self._name)
+				        return self._name
+				    def fset(self,name):
+				        self._name=name
+				        print('this is fset',name)
+				    def fdel(self):
+				        self._name='NoneName'
+				        print('this is fdel')
+				    name=property(fget,fset,fdel,'this is doc')
+				p=Person()
+				p.name='张三'
+				print(p.name)
+				</pre>
+				参数解析：对于传入的参数只能透过fset进行设置，获取的fget是不能传入参数的，只能获取数据和返回，fdel是执行的对参数或是变量的结尾操作
 - 下划线
 	- '_A'一个下划线表示只有类和子类能够使用 无法通过important引用
 	- '__A'两个下划线表示只能当前的类的对象的本身使用
@@ -1104,5 +1143,5 @@
 <br>
 <br>
 <hr/>
-# 课时35  1:11:29#
+# 课时36  31:56#
 <hr/>
