@@ -1079,15 +1079,145 @@
 				print(p.name)
 				</pre>
 				参数解析：对于传入的参数只能透过fset进行设置，获取的fget是不能传入参数的，只能获取数据和返回，fdel是执行的对参数或是变量的结尾操作
+		- 类的内置属性
+			- \_\_dict__ 以字典的方式显示类的成员组成
+			- \_\_doc__获取类的文档信息
+			- \_\_name__获取类的名称，如果在模块中使用获取的是模块的名称
+			- \_\_bases__获取某个类的所有父类，以元祖的形式显示
+			<pre>
+			class Student():
+			    '''
+			    说明文档
+			    '''
+			    name='张安',
+			    def setName(self):
+			        print('this is setName')
+			print(Student.__dict__)
+			print(Student.__doc__)
+			print(Student.__name__)
+			print(Student.__bases__)
+			</pre>
 - 下划线
 	- '_A'一个下划线表示只有类和子类能够使用 无法通过important引用
 	- '__A'两个下划线表示只能当前的类的对象的本身使用
 	- '__A__'表示系统函数
 - 魔法函数
 	- 魔法函数概述
-	- 构造类魔法函数
-	- 运算类魔法函数
-
+		- 不要认为的调用，在特殊的时刻自动执行
+		- 特征，方法名被前后两个下划线包裹
+		- 需要学习的时候在什么时候调用什么魔法函数
+	- 操作类
+		- \_\_init__:类中自动初始化的函数
+		- \_\_new__:对象实例化方法，类中首先被调用方法，一般不使用
+		- \_\_call__:对象当做函数使用的时候触发
+			- 实例化类后直接把实例化的类当做方法执行
+			<pre>
+			class A():
+			    def __init__(self):
+			        print('this is __init')
+			a=A()
+			a()
+			</pre>
+			这里a是一个类的实例化对象，但是不是方法，如果要调用，这里默认的是调用一个\_\_call__的方法
+			<pre>
+			class A():
+			    def __init__(self):
+			        print('this is __init')
+			    def __call__(self, *args, **kwargs):
+			        print('这是一个__call__函数')
+			a=A()
+			a()
+			</pre>
+			使用方法如上
+		- \_\_str__:当把对象当做字符串使用的时候引发的函数
+			<pre>
+			class A():
+			    def __init__(self):
+			        print('this is __init')
+			    def __str__(self):
+			        return 'this is __str__'
+			a=A()
+			print(a)
+			</pre>
+			把实例化的a对象直接使用的时候自动执行\_\_str__方法，返回的值就是a对象的
+		- \_\_repr__返回字符串，和上边的str方法一样，也有区别
+	- 描述服相关
+		- \_\_get__
+		- \_\_set__
+		- \_\_delet__
+	- 属性操作相关
+		- \_\_getattr__访问一个不存在的属性的时候触发
+			<pre>
+			class A():
+			    def __getattr__(self, item):
+			        print('__getattr__')
+			a=A()
+			print(a.setName)
+			</pre>
+			该方法会把要调用的方法当做参数传递进\_\_getattr\_\_方法中，如果传递进去的方法存在则执行，如果不存在则会执行\_\_getattr\_\_内部的方法
+		- \_\_setattr__对成员属性进行设置的时候触发
+			- 存在三个参数，(self,key,val)
+			- self当前对象
+			- key设置属性名称
+			- value设置属性或是名称的值
+			- 不能对属性进行直接赋值操作
+			<pre>
+			class A():
+			    def __init__(self):
+			        print('this is init')
+			    def __setattr__(self, key, value):
+			        print("执行到此处了")
+			        super().__setattr__(key,value)
+			a=A()			
+			a.setName=100			
+			print(a.setName)
+			</pre>
+			此处需要调用父类的setattr方法，如果直接使用该类中的setattr会出现死循环，在使用的时候赋值就可以进行正常赋值
+	- 运算分类相关魔术方法
+		- \_\_gt__进行大于运算的时候触发
+			- 参数self，本省
+			- 第二个对象
+				- 返回任意值，推荐boole
+			<pre>
+			class A():
+			    def __init__(self,name):
+			        self.name=name
+			    def __gt__(self, other):
+			        return self.name>other.name
+			a1=A(10)
+			a2=A(1000)
+			print(a1>a2)
+			</pre>
+			使用方法如上，需要比较的是两个实例化传入的参数，
+			用于比较的两个参数会默认\_\_init\_\_为第一个参数，\_\_gt\_\_的参数为第二个参数进行比较
+	- 类和对象的三种方法
+		- 实例方法
+			- 需要实例化对象才能使用的方法，使用的时候需要截止对象的的其他对象的方法完成
+		- 静态方法
+			- 不需要实例化，通过类直接访问(也可以通过实例化后的对象进行调用)；参数随意，没有“self”和“cls”参数，但是方法体中不能使用类或实例的任何属性和方法；
+		- 类方法
+			- 不需要实例化(也可以通过实例化后的对象进行调用)；该参数名一般约定为“cls”，通过它来传递类的属性和方法（不能传实例的属性和方法）；
+		<pre>
+		class A():
+		    def setName(self):  #实例化方法
+		        print('this is 实例化方法')
+		    @classmethod；    #类方法
+		    def name(cls):
+		        print('this is 类方法')
+		    @staticmethod   #静态方法
+		    def staticName():
+		        print('this is 静态方法')
+		a=A()
+		#实例化
+		a.setName()
+		#类方法
+		a.name()
+		A.name()
+		#静态方法
+		a.staticName()
+		A.staticName()
+		</pre>
+		- 区别
 
 
 
@@ -1143,5 +1273,5 @@
 <br>
 <br>
 <hr/>
-# 课时36  31:56#
+# 课时37#
 <hr/>
