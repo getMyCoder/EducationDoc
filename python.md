@@ -1218,7 +1218,179 @@
 		A.staticName()
 		</pre>
 		- 区别
-
+	- 成员描述符
+		- 变量的三种用法
+			- 查询（调用）
+			- 修改（修改变量）
+			- 删（删除变量）
+			<pre>
+			class A():
+			    def __init__(self):
+			        self.name='www'
+			a=A()
+			print(a.name) #查询
+			a.name='http' #修改
+			print(a.name)
+			del a.name  #删除
+			print(a.name)
+			</pre> 
+		- 属性property
+			<pre>
+			class A():
+			    def __init__(self):
+			        self.name='张三'
+			    def fget(self):
+			        print('我被执行了')
+			        return self.name
+			    def fset(self,name):
+			        self.name='百度:'+name
+			    def fdel(self):
+			        print('删除成功')
+			    user=property(fget,fset,fdel,'this is property')
+			a=A()
+			print(a.name)
+			a.user='AAA'
+			print(a.user)
+			</pre>
+			property方法是默认是调用fget方法，当给user设置值的时候才会调用fset方法，如果直接调用a.user是只调用fget而不调用fset
+		- 抽象类
+			- 抽象方法的定义：没有具体实现内容的方法成为抽象方法
+			- 抽象方法不是在父类中定义具体的方法，需要在继承的子类中实现具体的方法
+			<pre>
+			class A():
+			    def say(self):
+			        pass
+			class B(A):
+			    def say(self):
+			        print('this is person')
+			class C(A):
+			    def say(self):
+			        print('this is animal')
+			a=A()
+			a.say()
+			b=B()
+			b.say()
+			c=C()
+			c.say()
+			</pre>
+			- 抽象的类需要借助abc模块，import abc
+			- 声明抽象类的方法
+				- class Human(metaclass=abc.ABCMeta) 这种写法是死的，只能这么写
+				- 抽象方法的定义
+					@abc.abstractmethod
+					<pre>
+					import abc
+					class Human(metaclass=abc.ABCMeta):
+					    # 定义一个抽象的方法
+					    @abc.abstractmethod
+					    def person(self):
+					        pass
+					        # print('this is person')
+					    # 定义类抽象方法
+					    @abc.abstractclassmethod
+					    def animal(cls):
+					        pass
+					        # print('this is animal')
+					    # 定义静态抽象方法
+					    @abc.abstractstaticmethod
+					    def god():
+					        pass
+					</pre>
+			- 抽象类的使用(抽象方法使用较少)
+				- 抽象类可以包含抽象方法，也可以是具体的方法
+				- 抽象类中可以有方法可以有属性
+				- 抽象类不能直接实例化
+				- 必须继承才可以使用，且继承的子类必须实现所有继承类的抽象方法
+				- 假定子类没有实现继承的所有的抽象方法，子类也是不能实例化的
+				- 抽象类的主要作用是设定类型的标准，以便于开发的时候具有统一的规范
+				<pre>
+				import abc
+				class Human(metaclass=abc.ABCMeta):
+				    # 定义一个抽象的方法
+				    @abc.abstractmethod
+				    def person(self):
+				        pass
+				    # 定义类抽象方法
+				    @abc.abstractclassmethod
+				    def animal(cls):
+				        pass
+				    # 定义静态抽象方法
+				    @abc.abstractstaticmethod
+				    def god():
+				        pass
+				class Other(Human):
+				    def person(self):
+				        print('我继承了父类person')
+				    def animal(cls):
+				        print('我继承了父类animal')
+				    def god():
+				        print('我继承了父类god')
+				other=Other()
+				other.person()
+				other.animal()
+				Other.god()
+				</pre>
+			- 自定义类
+				- 函数名称可以当做变量使用
+				- 外面定义的类要用参数
+				<pre>
+				class A():
+				    pass
+				def setName(self):
+				    print('this is fun')
+				A.setName=setName
+				a=A()
+				a.setName()
+				</pre>
+				同
+				<pre>
+				class A():
+				    def setName(self):
+				        print('this is fun')
+				a=A()
+				a.setName()
+				</pre>
+				- 类就是一堆属性和一堆方法的集合，可以自定义的组装
+				- 组装的类需要在实例化之前赋值完成，也就是说往类上绑定方法(带参数)，而不是往实例化上绑定方法
+					- 对于往实例化上绑定方法需要借助于第三发木块 from types impor MethodType
+					<pre>
+					from types import MethodType
+					class A():
+					    pass
+					def B(self):
+					    print('this is B')
+					a=A()
+					a.B=MethodType(B,A)
+					a.B()
+					</pre>
+				- 把单独的类和单独的方法组装起来
+				- 借助于type实现
+				- type参数(类的名、继承的父类、类中的方法)
+				<pre>
+				def name(self):
+				    print('this is name')
+				def age(self):
+				    print('this is age')
+				A=type('Aname',(object,),{'class_Name':name,'class_Age':age})
+				a=A()
+				a.class_Name()
+				a.class_Age()
+				</pre>
+				- 利用元类实现，Metaclass,
+				- 元类的写法是固定的，必须继承type
+					- class A(type)
+					<pre>
+					class person(type):
+					    def __new__(cls, name,bases,attrs):
+					         attrs['id']='001'
+					         return type.__new__(cls,  name,bases,attrs)					
+					class getPerson(object,metaclass=person):
+					    pass
+					get=getPerson()					
+					print(get.id)
+					</pre>
+					metaclass为动态创建类的写法，创建类的内容为person继承的type的类，需要注意创建的person的类中的__new__的参数
+						
 
 
 
@@ -1251,23 +1423,65 @@
 <br>
 <br>
 <br>
-<br><br>
-<br>
-<br>
-<br><br>
-<br>
-<br>
-<br><br>
-<br>
-<br>
-<br><br>
-<br>
-<br>
-<br><br>
 <br>
 <br>
 <br>
-
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <br>
 <br>
 <br>
