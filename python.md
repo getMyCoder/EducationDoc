@@ -1390,9 +1390,104 @@
 					print(get.id)
 					</pre>
 					metaclass为动态创建类的写法，创建类的内容为person继承的type的类，需要注意创建的person的类中的__new__的参数
-						
-
-
+#### Python包 ####
+- 模块
+	- 一个模块就是一个包含python代码的片段，文件后缀为.py，模块就是python文件
+	- 模块的有点
+		- 程序拆分，方便维护
+		- 重复使用
+		- 当做命名空间使用
+	- 定义
+		- 就是普通文件
+		- 为了规范，最好在模块中书写
+			- 函数（最好功能单一）
+			- 类（相似功能的组合）
+			- 测试代码
+	- 如何使用
+		- 模块直接导入
+		- 语法
+			<pre>
+			import module
+			module.className
+			module.function()
+			A=module.AB()
+			A.function()
+			</pre>
+		- 案例
+			- 包文件
+			<pre>
+			class Student():
+			    def __init__(self,name,age):
+			        self.name=name
+			        self.age=age
+			    def setName(self):
+			        print('this is student:{0},age:{1}'.format(self.name,self.age))
+			def say():
+			    print('hello world')
+			</pre>
+			- 引用包文件
+			<pre>
+			import p01
+			A=p01.Student('张三',33)
+			A.setName()
+			p01.say()			
+			</pre>
+		- 包名为数字的不能直接导入
+			- 借助importLib
+		- import 模块 as 别名
+			<pre>
+			import p01 as AA
+			A=AA.Student('张三',33)
+			A.setName()
+			AA.say()
+			</pre>
+		- from module import func\_name,class\_name
+			<pre>
+			from p01 import Student,say
+			A=Student('张三',33)
+			A.setName()
+			say()
+			</pre>
+		- from module\_name import *把模块中的所有的都导入,好处是不用再用模块引包了
+			<pre>
+			from p01 import *
+			A=Student('张三',33)
+			A.setName()
+			say()
+			</pre>
+		- 对于导入的文件会自动执行函数和类外边的程序
+			- 加判断 if  \_\_name\_\_=='\_\_main\_\_'
+				- 这里的\_\_name\_\_是当前文件的名，'\_\_main\_\_'是当前文件当做主线程执行的时候(非引入)的文件名称或是包的名称
+			- 程序的入口就是被当做主线程巡行的名称(所有的主线程文件的名称都是\_\_main\_\_)
+	- 模块的路径
+		- 引用包
+			<pre>
+			import sys			
+			sys.path #显示路径
+			</pre>
+			搜索路径后，把包放在搜到的路径中，如果不想放在搜索到的文件路径中,往sys.path中添加路径  
+			sys.path.append(dir)dir为设置的路径
+		- 路径的查找顺序
+			- 先在内存中查找
+			- 搜索python内置模块
+			- 搜索sys.path中的路径
+		- 包是大于模块，包中是放置模块的文件夹
+			- 包大于模块
+			- 模块是文件
+			- 包是文件夹
+		- 项目文件夹的文件
+			- 包的结构
+				- 每一个包中包含一个\_\_init\_\_.py文件(有且只有一个)
+				- 模块文件.py
+				- 可以包中嵌套包
+		- 包的导入操作
+			- import package\_name
+				- 直接导入的包可以使用\_\_init\_\_.py中的内容
+				- 使用方式
+					- package\_name.fun()
+					- package\_name.class\_name.fun()
+			
+			
 
 
 
