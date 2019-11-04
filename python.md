@@ -1486,15 +1486,202 @@
 				- 使用方式
 					- package\_name.fun()
 					- package\_name.class\_name.fun()
-			
-			
-
-
-
-
-
-
-
+					- 也可以用别名 import packageName as packageNewName
+				- 案例01
+					- \_\_init\_\_.py文件
+					<pre>
+					def AA():
+					    print('hello world')
+					</pre>
+					- 调用
+					<pre>
+					import bao01
+					bao01.AA()
+					</pre>
+				- 案例02，导入包文件
+					- import package.module
+						- package.module.fun_name
+						- package.module.class.fun()
+						- package.module.class.var
+						- 包内容
+						<pre>
+						def BB():
+						    print('hello world')
+						</pre>
+						- 调用
+						<pre>
+						import bao01.bao01
+						bao01.bao01.BB()
+						</pre>
+					- import package.module as pm重命名
+					- from ... import
+						- from package import module，module01
+							- 这种导入方法不执行\_\_init.py\_\_文件
+						- from package import *全部导入
+							- 导入\_\_init.py\_\_中的所有函数和类
+						- from module import *导入包中指定模块的多有内容
+						<pre>
+						from bao01 import bao01
+						bao01.BB()
+						</pre>
+				
+			- 开发环境中的导入包和模块是一样的
+				 - import 完整的包货值木块的路径
+			- \_\_all\_\_的用法,写在\_\_init\_\_.py中，用于定义那些包导出
+				- \_\_all\_\_=['mudule01','module02',...]
+				- 使用方法 
+				- \_\_init\_\_
+				<pre>
+				__all__=['pp2']
+				def inF():
+				    print('this is __init__.py')
+				</pre>
+				- 调用
+				<pre>
+				from bao01 import *
+				pp2.BB()
+				</pre>
+		- 命名空间
+			- 用去区分不同位置不同功能但是函数或是变量名相同的
+			- 放置命名冲突
+#### 异常使用 ####
+- 异常
+	- 错误分为错误和异常
+		- 错误指的是人为
+		- 异常指语法逻辑正确但是出现问题
+		- python中异常时一个类，可以处理和使用
+		- 异常分类，异常为系统的异常
+		<pre>
+		BaseException	所有异常的基类
+		SystemExit	解释器请求退出
+		KeyboardInterrupt	用户中断执行(通常是输入^C)
+		Exception	常规错误的基类
+		StopIteration	迭代器没有更多的值
+		GeneratorExit	生成器(generator)发生异常来通知退出
+		StandardError	所有的内建标准异常的基类
+		ArithmeticError	所有数值计算错误的基类
+		FloatingPointError	浮点计算错误
+		OverflowError	数值运算超出最大限制
+		ZeroDivisionError	除(或取模)零 (所有数据类型)
+		AssertionError	断言语句失败
+		AttributeError	对象没有这个属性
+		EOFError	没有内建输入,到达EOF 标记
+		EnvironmentError	操作系统错误的基类
+		IOError	输入/输出操作失败
+		OSError	操作系统错误
+		WindowsError	系统调用失败
+		ImportError	导入模块/对象失败
+		LookupError	无效数据查询的基类
+		IndexError	序列中没有此索引(index)
+		KeyError	映射中没有这个键
+		MemoryError	内存溢出错误(对于Python 解释器不是致命的)
+		NameError	未声明/初始化对象 (没有属性)
+		UnboundLocalError	访问未初始化的本地变量
+		ReferenceError	弱引用(Weak reference)试图访问已经垃圾回收了的对象
+		RuntimeError	一般的运行时错误
+		NotImplementedError	尚未实现的方法
+		SyntaxError	Python 语法错误
+		IndentationError	缩进错误
+		TabError	Tab 和空格混用
+		SystemError	一般的解释器系统错误
+		TypeError	对类型无效的操作
+		ValueError	传入无效的参数
+		UnicodeError	Unicode 相关的错误
+		UnicodeDecodeError	Unicode 解码时的错误
+		UnicodeEncodeError	Unicode 编码时错误
+		UnicodeTranslateError	Unicode 转换时错误
+		Warning	警告的基类
+		DeprecationWarning	关于被弃用的特征的警告
+		FutureWarning	关于构造将来语义会有改变的警告
+		OverflowWarning	旧的关于自动提升为长整型(long)的警告
+		PendingDeprecationWarning	关于特性将会被废弃的警告
+		RuntimeWarning	可疑的运行时行为(runtime behavior)的警告
+		SyntaxWarning	可疑的语法的警告
+		UserWarning	用户代码生成的警告
+		</pre>
+		- 异常处理模块语法
+		<pre>
+		try:
+			尝试实现某个操作
+		except 异常类型1:
+			解决方案1
+		except 异常类型2:
+			解决方案2
+		except (异常类型1,异常类型2...)
+			针对多个异常使用相同的处理方式
+		except:
+			所有异常的解决方案
+		else:
+			如果没有出现异常，执行此代码
+		finally:
+			无论有没有出现异常都会执行此代码
+		</pre>
+		- 对于异常结果的处理
+			- 捕获异常后，把异常实例化，异常信息会在实例中，实例化就是把出错的描述返回出来
+			- 例如ZeroDivisionError as e中的e就是把ZeroDivisionError的错误信息描述返回出来
+			- exit()是退出程序
+			<pre>
+			try:
+			    num = int(input('please:'))
+			    print(100 / num)
+			except ZeroDivisionError as e:
+			    print('分母不能为0')
+			    print(e)
+			    # 退出程序
+			    exit()
+			else:
+			    print('没有异常')
+			finally:
+			    print('无论有没有异常都会之行我')			
+			</pre>
+			- 如果不知道是什么异常，用Exception
+				- except Exception as e:
+			- 对于写except具体的错误写在前边，如果不知道是什么错误写在后边用Excetion
+			- 处理异常的时候，执行到异常处，直接推出程序
+			- 所有异常都是集成Exception，Exception包括所有的错误，所以Exception后边不能except，因为Exception会捕获所有的错误
+			- 用户手动发生异常，可以使用raise，即为手动发生异常
+			- 手动发生异常的错误类型也需要时系统中的异常类型，不能自定义类型，否则会报错
+				<pre>
+				try:
+				    print('执行到此处')
+				    raise TypeError
+				    print('我应该不会被执行')
+				except TypeError as e:
+				    print('TypeError类型的错误')
+				    exit()
+				except UserWarning as e:
+				    print('UserWarning类型的错误')
+				    exit()
+				except Exception as e:
+				    print(e)
+				    exit()
+				finally:
+				    print('程序已执行完毕')
+				</pre>
+			- 自定义异常错误
+				- 自定义异常必须是系统异常的子类,是什么异常类型就需要继承什么异常的类
+				- 如果在except中没有发现自定义异常类型的类，则会捕获父类的异常类型
+				- 关于自定义异常，只要是raise就推荐自定义异常
+					- 自定义发生异常的异常代码
+					- 自定义发生异常后的提示问题
+					- 自定义发生异常的行数
+					- 目的，快速定义到出现问题的位置
+				<pre>
+				class MyError(ValueError):
+				    print('ValueError的子类异常')
+				try:
+				    print('执行到此处')
+				    raise MyError
+				    print('我应该不会被执行')
+				except TypeError as e:
+				    print('TypeError类型的错误')
+				    exit()
+				except MyError as e:
+				    print('MyError类型的错误')
+				    exit()
+				finally:
+				    print('程序已执行完毕')
+				</pre>
 
 
 
