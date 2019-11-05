@@ -1682,7 +1682,112 @@
 				finally:
 				    print('程序已执行完毕')
 				</pre>
-
+#### 常用包 ####
+- 常用模块
+	- calendar
+		- 日历
+		- w=每个日期之间的间隔字符数
+		- l=每周所占用的行数
+		- c=每个月之间的间隔字符数
+		- calendar.calendar(2017),2017年所有
+		<pre>
+		import calendar
+		call=calendar.calendar(2017,w=0,l=0,c=5)
+		</pre>
+		- isleap判断是否是闰年calendar.isleap(2017)
+		- leapdays指定年份之间的闰年的个数calendar.leapdays(2017,3000)
+		- month()获取某个月份的字符串calendar.month(2018,3)
+		- mothrange表示月份有多少天，calendar.monthrange(2018,3)表示2018年的3月份有多少天
+		- mothcalendar(年,月)返回一个也月每天的矩阵，calendar.monthcalendar(2018,3)，二维数组
+		- prcal(年)直接打印日历calendar.prcal(2018)，打印一年的日历
+		- prmoth(年,月)获取月份
+		- weekday(年,月,日)获取周几
+	- time
+		- 时间戳，1970年到现在
+		- utc时间
+		- 夏令营
+		- 时间元组
+		- timezone当前时间和UTC时间差值
+		- altzone获取当前时间和UTC时间差值，在夏令时情况下
+		- daylight，当前时候是夏令时
+		- time()，获取时间戳
+		- localtime(),获取本地时间的时间结构time.localtime().tm_hour
+		- asctime返回元祖的正常字符串之后的事件格式
+		- ctime获取字符串的当前时间
+		- mktime()使用时间元祖转为时间戳，时间互换
+		- clock获取cpu时间，3.0-3.3版本使用
+		- sleep程序进入睡眠时间，即为延迟
+		- strftime把元祖转为自定义的字符创
+			- %y 两位数的年份表示（00-99）
+			- %Y 四位数的年份表示（000-9999）
+			- %m 月份（01-12）
+			- %d 月内中的一天（0-31）
+			- %H 24小时制小时数（0-23）
+			- %I 12小时制小时数（01-12）
+			- %M 分钟数（00=59）
+			- %S 秒（00-59）
+			- %a 本地简化星期名称
+			- %A 本地完整星期名称
+			- %b 本地简化的月份名称
+			- %B 本地完整的月份名称
+			- %c 本地相应的日期表示和时间表示
+			- %j 年内的一天（001-366）
+			- %p 本地A.M.或P.M.的等价符
+			- %U 一年中的星期数（00-53）星期天为星期的开始
+			- %w 星期（0-6），星期天为星期的开始
+			- %W 一年中的星期数（00-53）星期一为星期的开始
+			- %x 本地相应的日期表示
+			- %X 本地相应的时间表示
+			- %Z 当前时区的名称
+			- %% %号本身
+		<pre>
+		import time
+		print(time.timezone)
+		print(time.altzone)
+		print(time.daylight)
+		print(time.time())
+		print(time.localtime())
+		print(time.asctime())
+		print(time.ctime())
+		print(time.mktime(time.localtime()))
+		# print(time.clock())
+		time.sleep(3)
+		print('睡眠过后')
+		t=time.localtime()
+		d=time.strftime("%Y-%m-%d %H:%M",t)
+		print(d)
+		</pre>
+	- datetime
+		- 表示日期
+		- data一个理想的日期提供year,month,day属性
+		- datetime提供日期和时间的组合
+			- today
+			- now
+			- utcnow
+			- fromtimestamp
+		- timedelta提供一个时间差，时间长度
+		<pre>
+		import datetime
+		t=datetime.date(2019,10,5)
+		print(t)
+		print(t.year)
+		print(t.month)
+		print(t.day)
+		from datetime import datetime
+		dt=datetime(2019,11,5)
+		print(dt.today())
+		print(dt.now())
+		print(dt.utcnow())
+		print(dt.fromtimestamp(time.time()))
+		</pre>
+	- timeit
+		- 时间测量工具
+	- os
+	- shutil
+	- zio
+	- math
+	- string
+	- 上述引用的模块需要先导入，string是特例
 
 
 
@@ -1769,5 +1874,5 @@
 <br>
 <br>
 <hr/>
-# 课时39 1:21:30#
+# 课时41 1:31:12#
 <hr/>
