@@ -1782,8 +1782,120 @@
 		</pre>
 	- timeit
 		- 时间测量工具
+		- timeit.timeit(stmt=fun,number=1000)用于测量程序执行的时间，这里返回出来的是一个时间值
 	- os
+		- 和操作系统相关的东西
+		- 主要是文件操作
+		- 主要包含三个模块
+		- os，和系统目录相关
+		- os.path和系统路径相关
+		- shutil高级文件操作，对文件的赋值，删除，移动
+		- os
+			- os.getcwd()获取当前的工作目录
+			- os.chdir()改变当前的工作目录
+			- os.lidtdir()获取一个子目录中所有子目录和文件
+			- os.makedirs()递归创建文件夹
+			<pre>
+			import os
+			print(os.getcwd()) #获取当前目录
+			print(os.listdir()) #获取当前目录中的子目录和文件
+			print(os.makedirs('BBB')) #创建文件夹
+			os.chdir('F:\python\AAA') #更改当前的工作目录
+			print(os.getcwd())
+			</pre>
+			- os.system()运行系统的shell命令
+				- 一般推荐使用subprocess代替
+			- getenv()获取指定的系统环境变量值，os.getenv('环境变量值')
+			- putenv（）设置环境变量
+			- exit()退出当前程序
+			<pre>
+			import os
+			print(os.system("touch ASD.CC"))
+			print(os.getenv('PATH'))
+			</pre>
+			- 值部分
+				- os.curdir当前目录
+				- os.pardir父目录
+				- os.set当前系统的目录分隔符
+				- os.linesep当前系统的换行符
+				- os.name当前系统名称
+				<pre>
+				import os
+				print(os.curdir)
+				print(os.pardir)
+				print(os.sep)
+				print(os.linesep)
+				print(os.name)
+				</pre>
+		- os.path和路径相关的模块
+			- os.path.abspath()将路径转为绝对路径
+			- os.path.abselute绝对路径
+			- os.path.basename()获取路径中的文件名部分
+			- os.path.join(路径1，路径2)
+			- os.path.split('文件件路径/文件')切割文件路径中的路径和当前文件
+			- os.path.isdir('路径')判断是否是目录
+			- os.path.exists()检测文件或是目录是否存在
+			<pre>
+			import os.path as op
+			print(op.abspath('.'))
+			print(op.basename('F:\python'))
+			p=op.join('path01/AA','path02.txt')
+			print(p)
+			print(op.split(p))
+			print(op.isdir('adf/adsf'))
+			print(op.exists('F:\python\AAA'))
+			</pre>
 	- shutil
+		- 常用的文件模块
+		- shutil.copy('源文件路径','目标文件路径')复制文件
+		- shutil.copy2('源文件路径','目标文件路径')复制文件，尽量保留源文件的元数据
+		- shutil.copyfile('源文件路径','目标文件路径')将一个文件中的内容复制到另一个文件中去
+		- shutil.move('源文件路径','目标文件路径')移动文件/文件件
+		<pre>
+		import shutil
+		shutil.copy('F:\python/box.py','F:\python\AAA')
+		shutil.copyfile('F:\python/copy.html','F:\python\AAA\A.html')
+		shutil.move('F:\python/copy.html','F:\python\AAA')
+		</pre>
+		- 归档和压缩
+			- 归档:把多个文件或是文件夹合并到一个文件中
+			- 压缩:用算法把文件或是文件夹合并到一个问价中
+			- shutil.make_archive('归档之后的文件名或是目录','后缀','需要归档的文件夹')归档操作
+			- shutil.unpack_archive('解包的文件地址','解包后的文件地址')解包操作
+			<pre>
+			import shutil
+			shutil.make_archive('F:\python\ABC','zip','F:\python\AAA') #压缩文件
+			shutil.unpack_archive('F:\python\ABC.zip','F:\python\BBB')
+			</pre>
+		- zip-压缩包
+			- zipfile.ZipFile('压缩包的路径')实例化
+			- zipfile.ZipFile('压缩包的路径').getinfo(name)获取压缩的内容
+			- zipfile.ZipFile('压缩包的路径').nameList()获取压缩内的文件名
+			- zipfile.ZipFile('压缩包的路径').extractall()解压缩
+			<pre>
+			import zipfile
+			zf=zipfile.ZipFile('F:\python\ABC.zip')
+			print(zf.getinfo('A.html'))
+			print(zf.namelist())
+			zf.extractall('F:\python\CCC')
+			</pre>
+	- random
+		- 随机模块，伪随机
+		- random.random()生成随机数
+		- random.choice()随机选择数列中的某个值
+		- random.shuffle()随机打乱列表，打乱的是原来的列表
+		- random.randint(0,100)随机产生一个整数(0到100)，包含0和100
+		<pre>
+		import random
+		print(random.random())
+		print(int(random.random()*100))
+		l=[i for i in range(10)]
+		print(l)
+		print(random.choice(l))
+		l1=random.shuffle(l)
+		print(l)
+		print(random.randint(0,20))
+		</pre>
 	- zio
 	- math
 	- string
@@ -1874,5 +1986,5 @@
 <br>
 <br>
 <hr/>
-# 课时41 1:31:12#
+# 课时43#
 <hr/>
