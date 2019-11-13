@@ -1900,15 +1900,151 @@
 	- math
 	- string
 	- 上述引用的模块需要先导入，string是特例
-
-
-
-
-
-
-
-
-
+#### 函数式编程 ####
+- 高级特性
+- 基于lambda盐酸的一种编程方式
+	- 程序中只有函数
+	- 函数可以作为参数，同样可以作为返回值
+	- 纯函数式编程:lisp,Haskell
+- 函数
+	- 高阶函数
+	- 返回函数
+	- 匿名函数
+	- 装饰器
+	- 偏函数
+- lambda表达式
+	- 最大程度上服用代码
+	- 匿名函数
+	- 一个表达式，函数体相对简单
+	- 仅仅是一个表达式
+	- 用法
+		- 以lambda开头
+		- 紧跟一定的参数
+		- 参数后用冒号和表达式主题隔开
+		- 只有一个表达式
+		<pre>
+		num=lambda i:i*20
+		print(num(20))
+		sum=lambda a,b,c:a+b*2+c*3
+		print(sum(1,2,3))
+		</pre>
+	- 递归函数
+- 高阶函数
+	- 把函数作为参数的使用的函数
+	- 高阶函数就是javascript的回调函数
+	<pre>
+	def AA():
+	    setName='张三'
+	    return setName
+	def BB(callback):
+	    getName=callback()
+	    print(getName)
+	BB(AA)
+	def A(n):
+	    return n*10
+	def B(m,f):
+	    return f(m)*30
+	print(B(2,A))
+	</pre>
+- 系统高阶函数-map
+	- 愿意就是映射，把集合或是列表都进行操作，从而得到新的集合
+	- map返回一个迭代对象
+	- map(fun,list),map是一个类，迭代完成后还是一个map对象，需要用for循环输出迭代后的值
+	<pre>
+	l=[i for i in range(10)]
+	def C(n):
+	    return n*10
+	l2=map(C,l)
+	for i in l2:
+	    print(i)
+	</pre>
+- reduce
+	- 愿意是归并，缩减
+	- 把一个可迭代的对象归并成一个结果
+	- 参数：两个参数，必须有返回结果
+	- reduce()
+	- 需要应用functool包
+	<pre>
+	from functools import reduce
+	l=[i for i in range(10)]
+	def sum(a,b):
+	    return a+b
+	getSum=reduce(sum,l)
+	print(getSum)
+	</pre>
+- filter
+	- 对一组数据进行过滤
+	- 和map比较
+		- 相同：都对每一个元素注意进行操作
+		- 不同
+			- map生成新的数列和原数列是一对一的
+			- filter是过滤，符合调价的留下
+	- 利用给定的函数就行判断
+	- 返回值是一个布尔值
+	- filter(f,data),参数分别问过滤函数、数列，生成的新的数列是一个filter类，如果要数列的数据，需要循环
+	<pre>
+	l=[i for i in range(10)]
+	def setNumber(n):
+	    return n%2==0
+	num=filter(setNumber,l)
+	for i in num:
+	    print(i)
+	</pre>
+- 高阶函数-排序
+	- 把一个序列按照给定的方法进行排序
+	- sorted(list,reverse=True)倒序
+	<pre>
+	l=[99,23,6,-565,69,-5,3,2,1]
+	l1=sorted(l)
+	l2=sorted(l,key=abs,reverse=True)
+	print(l1)
+	print(l2)
+	</pre>
+- 返回函数
+	- 可以返回一个具体的值，也可以返回一个函数
+	- 例子如下，同时如下的例子也是一个闭包函数
+	<pre>
+	def f1(*args):
+	    def f2():
+	        sum=0
+	        for i in args:
+	            sum+=i
+	        return sum
+	    return f2
+	f=f1(1,2,3,4,5,6)
+	print(f())
+	</pre>
+- 闭包函数
+	- 问题，返回闭包时，返回函数不能引用任何循环变量
+	<pre>
+	def count():
+	    fs=[]
+	    for i in range(1,4):
+	        def A():
+	            return i*i
+	        fs.append(A) #fs中添加的是A函数，只是添加进去，现在并不立即执行
+	    return fs #把列表返回，这里的列表中是三个方法，但是这三个方法是不能用for循环的
+	f1,f2,f3=count() #把返回的列表中的三个函数分别赋值给f1,f2,f3
+	print(f1()) #在调用的时候此时的i为3
+	print(f2()) #在调用的时候此时的i为3
+	print(f3()) #在调用的时候此时的i为3
+	</pre>
+	- 解决方法
+	<pre>
+	def count():
+	    def f(n):
+	        def A():
+	            return n*n
+	        return A    #这里返回的方法，并且此时方法内部的参数的运算已经完成
+	    fs=[]
+	    for i in range(1,4):
+	        fs.append(f(i)) #fs中添加进去的是三个方法，但是方法中的运算已经完成，此时只剩输出
+	    return fs   #返回列表中的方法
+	f1,f2,f3=count()
+	print(f1()) #在没有运行该方法之前，方法内部的运算已经完成，这里的调用只是把方法内部的值输出
+	print(f2())
+	print(f3())
+	</pre>
 
 
 
