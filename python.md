@@ -2045,6 +2045,214 @@
 	print(f2())
 	print(f3())
 	</pre>
+- 装饰器
+	- 在当前的函数上增加新的需求，不改变原有的代码
+	- 一个返回函数的高阶函数
+	- 装饰器的使用:使用@语法，在每次要扩展的方法前边定义使用@+函数名
+	- 装饰器可以多次使用
+	- 装饰器的理解，定义一个需求，可以多次使用，虽说往装饰器中添加新的需求，但是同一个装饰器的不同地方调用是相互不影响的(有点像javascript的封装)。
+	- 装饰器的写法一般固定
+	- 第一种写法
+	<pre>
+	def A(f): #高阶函数，参数为一个函数，这里的参数可以认为是整个方法的一个中间变量
+	    def newA(*args,**kwargs):#这个方法是写需求的方法
+	        print('this is function newA')  #初始时候的要执行的方法
+	        return f(*args,**kwargs)    # 这里是返回的参数函数，
+	    return newA
+	# 调用
+	@A
+	def DA():
+	    print('这是一个新添加的需求')
+	DA()
+	@A
+	def EA():
+	    print('this is a new EA')
+	EA()
+	</pre>
+	- 理解：A函数是一个外层的过度函数，起一个返回实际需求newA的作用；newA是实际要执行的方法，实际上整个方法裸露出来的是
+	<pre>
+	print('this is function newA')
+	return f(*args,**kwargs)
+	</pre>
+	- 或是说是真正执行的是这一部分，return返回出来的函数是拓展要添加的函数
+	- 第二种写法
+	<pre>
+	def A(f): #高阶函数，参数为一个函数，这里的参数可以认为是整个方法的一个中间变量
+	    def newA(*args,**kwargs):#这个方法是写需求的方法
+	        print('this is function newA')  #初始时候的要执行的方法
+	        return f(*args,**kwargs)    # 这里是返回的参数函数，
+	    return newA
+	# 调用
+	#第二种调用方法
+	def EA():
+	    print('第二种调用方法')
+	EA=A(EA)
+	EA()
+	</pre>
+	- EA=A(EA)理解：简单讲就是把EA方法穿进去，然后把EA的方法和装饰器的方法一起返回出来，然后再赋值给EA
+- 偏函数
+	- 参数固定的函数，相当于一个由特定参数的函数体
+	- 需要用的包functool中的partial
+	<pre>
+	import functools
+	int16=functools.partial(int,base=16)
+	print(int16('20')) 
+	</pre>
+#### 高级语法 ####
+- 高级函数
+	- zip，把多个可迭代数列合并成tuple元素类型
+	<pre>
+	l1=[1,2,3,4,5]
+	l2=[1,2,3,4,5]
+	print(zip(l1,l2))
+	for i in zip(l1,l2):
+	    print(i)
+	</pre>
+	- enumerate
+		- 和zip相似
+		- 对可迭代对象里的每一个元素配上一个索引
+		- 迭代的索引是从0开始
+		- enumerate(l1，start=100)设置从100开始
+		<pre>
+		l1=[22,33,6,5,2,8,5]
+		for i in enumerate(l1):
+		    print(i)
+		</pre>
+	- collections模块
+		- namedtuple
+			- tuple类型
+			- 可命名的tuple
+			- 理解：使用方法类似于javascript的对象和数组
+			- tuple新型的数据结构
+			- 设置数组的时候Point(12,23)，为设置当前的p的数据，非数据列表
+			<pre>
+			import collections
+			Point=collections.namedtuple('Point',['x','y'])
+			p=Point(12,23)
+			print(p.x)
+			print(p[0])
+			</pre>
+		- deque
+			- 队列表的数据的操作
+			<pre>
+			from _collections import deque
+			q=deque(['a'])
+			q.append('b')
+			q.appendleft('c')
+			print(q)
+			</pre>
+		- defaultdict
+			- 当直接读取dict不存在的属性时，直接返回默认值
+			<pre>
+			from _collections import defaultdict
+			fun=lambda :'this is none'
+			d=defaultdict(fun)
+			d['one']=1
+			print(d['one'])
+			print(d['two'])
+			</pre>
+		- Counter
+			- 统计字符串的个数
+			- 字符串的字符是可迭代的
+			- 不仅仅是字符串，也可以是列表
+			<pre>
+			from collections import Counter
+			c=Counter('abcdefg hello world')
+			print(c)
+			</pre>
+- 调试
+	- 调试流程:单元调试->集成测试->交测试
+	- 分类
+		- 静态调试
+		- 动态调试
+	- pdb调试
+	- pycharm调试
+		- run/debug模式
+	- 单元测试
+- file
+	- 文件，长久保存信息的一种数据信息集合
+	- 常用操作
+		- 打开
+			- open(r'文件的路径和名称','打开方式')
+			- 参数r表示字符串后边的内容不需要转义
+			- 打开方式
+				- r:只读方式打开文件
+				- w:写方式打开，会覆盖以前的内容
+				- x:创建方式打开，如果文件已经存在，报错
+				- a:append方式，追加文件
+				- b:binary方式，以二进制方式写入
+				- t:文本方式打开
+				- +：可读写
+				<pre>
+				f=open('F:\python\CCC\A.html','w')
+				f.close()
+				</pre>
+		- 关闭
+			- f.close()
+	- width语句，会给自动关闭(推荐使用)
+		- 自动判断文件袋作用域，会自动关闭不使用的文件
+		- 使用方式不需要close关闭文件
+		<pre>
+		with open(r'F:\python\CCC\A.html','w') as f:
+		    pass
+		</pre>
+		<pre>
+		with open(r'F:\python\CCC\test.txt', 'r') as f:
+		    strline = f.readline()
+		    while strline:
+		        print(strline)
+		        strline = f.readline()
+		</pre>
+		- list
+			- list能用打开的文件作为参数，把文件的内的每一行内容作为一个元素
+			- 简单理解就是把每一行作为一个参数存入到list中的，然后再循环list使用数据
+			<pre>
+			with open(r'F:\python\CCC\test.txt', 'r') as f:
+			    strline=list(f)
+			    for i in strline:
+			        print(i)
+			</pre>
+		- read
+			- 按照文件字符读取内容
+			- 允许输入参数决定读取的字符个数
+			<pre>
+			with open(r'F:\python\CCC\test.txt', 'r') as f:
+			    strline=f.read()
+			    print(strline)
+			</pre>
+			<pre>
+			with open(r'F:\python\CCC\test.txt', 'r') as f:
+			    strline=f.readline()
+			    while strline:
+			        print(strline)
+			        strline = f.readline()
+			</pre>
+		- seek(offset,from)
+			- 参数(偏移到哪儿,从哪儿开始偏移)
+			- 移动文件的读取位置，也叫读取的指针
+			- from的取值范围
+				- 0：从文件开头开始偏移
+				- 1：从文件当前位置开始偏移
+				- 2：从文件末尾开始偏移
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2122,5 +2330,5 @@
 <br>
 <br>
 <hr/>
-# 课时43#
+# 课时46 43:58#
 <hr/>
