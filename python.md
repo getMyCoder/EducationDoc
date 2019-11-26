@@ -2230,17 +2230,134 @@
 		- seek(offset,from)
 			- 参数(偏移到哪儿,从哪儿开始偏移)
 			- 移动文件的读取位置，也叫读取的指针
+			- 从第几个字符处开始往后读取，单位是字节
 			- from的取值范围
 				- 0：从文件开头开始偏移
 				- 1：从文件当前位置开始偏移
 				- 2：从文件末尾开始偏移
+		- tell是获取当前的指针的位置
+			<pre>
+			with open(r'F:\python\CCC\test.txt', 'r') as f:
+			    str=f.read(3)
+			    pos=f.tell()
+			    while str:
+			        print(str)
+			        print(pos)
+			        pos = f.tell()
+			        str = f.read(3)
+			</per>
+		- 练习
+			- 读取文件三个字符一组
+			<pre>
+			with open(r'F:\python\CCC\test.txt', 'r') as f:
+			    str=f.read(3)
+			    while str:
+			        print(str)
+			        str = f.read(3)
+			</pre>
+	- 文件的写入操作(不存在删除，拷贝)
+		- write
+			- write(str)把字符串写入文件
+			- writeline(str)把字符串按行写入文件
+			- 区别
+				- wirte函数参数只能是字符串
+				- writeline参数可以是字符串，也可以是字符序列
+				<pre>
+				with open(r'F:\python\CCC\w.txt', 'w') as f:
+				    f.write('山东省\n')
+				    f.write('济南市\n')
+				    f.write('历城区\n')
+				    f.writelines('山东省\n')
+				    f.writelines('济南市\n')
+				    f.writelines('历城区\n')
+				    l=['this','is','shandong']
+				    f.writelines(l)
+				</pre>
+- pickle
+	- 序列化(持久化，就是把数据写到硬盘上)，把程序运行中的信息保存到硬盘上
+	- 反序列化，把硬盘上的数据读取到程序中
+	- pickle：python提供的序列化模块
+	- pickle.dump序列化（数据的实时存储，一般不用文件）
+	- pickle.load反序列化
+	- 简单理解就是数据的读取和存入
+	<pre>
+	import pickle
+	age=100
+	with open(r'F:\python\CCC\123.txt','wb') as f:
+	    pickle.dump(age,f)
+	</pre>
+	<pre>
+	import pickle
+	age=100
+	with open(r'F:\python\CCC\123.txt','rb') as f:
+	    print(pickle.load(f))
+	</pre>
 
-
-
-
-
-
-
+- 持久化-shelve
+	- 和字典类似
+	- open
+	- close
+	<pre>
+	import shelve
+	# shelve写入
+	shv=shelve.open(r'shv.db')
+	shv['one']='this is first'
+	shv['two']='this is second'
+	shv.close()
+	# 读取
+	shvG=shelve.open(r'shv.db')
+	print(shvG['one'])
+	print(shvG['two'])
+	shvG.close()
+	</pre>
+	- 一般使用 try和finally
+	<pre>
+	shvG=shelve.open(r'shv.db')
+	try:
+	    print(shvG['one'])
+	    print(shvG['two'])
+	finally:
+	    shvG.close()
+	</pre>
+	- shelve特性
+		- shelve指定的是一种.db格式的数据
+		- 不支持多个应用并行写入
+			- 但是支持多个应用程序的读取，flag=r
+			<pre>
+			import shelve
+			shvG=shelve.open(r'shv.db',flag='r')
+			try:
+			    print(shvG['one'])
+			    print(shvG['two'])
+			finally:
+			    shvG.close()
+			</pre>
+		- 写回问题
+			- 就是覆盖
+			- 强制写回 writeback=True
+			- 强制写回的是在修改数据的在关闭的文件的时候会去检测文件的内容是否发生更改，如果发生更改则进行修改，如果不加writeback=True，则不会自动去监测文件是否发生更改
+			- 这里的写回问题指的是字典中的二级数据，对于一级数据不存在这样的问题
+			<pre>
+			#写入
+			import shelve
+			shvA=shelve.open(r'shv.db')
+			try:
+			    shvA['one']={'name':'hello world','age':'20'}
+			finally:
+			    shvA.close()
+			# 更改
+			shvB=shelve.open(r'shv.db',writeback=True)
+			try:
+			    shvB['one']['name']='山东省'
+			finally:
+			    shvB.close()
+			# 读取
+			shvC=shelve.open(r'shv.db')
+			try:
+			    print(shvC['one'])
+			finally:
+			    shvC.close()
+			</pre>
 
 
 
@@ -2330,5 +2447,5 @@
 <br>
 <br>
 <hr/>
-# 课时46 43:58#
+# 课时44#
 <hr/>
