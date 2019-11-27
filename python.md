@@ -2358,14 +2358,139 @@
 			finally:
 			    shvC.close()
 			</pre>
+- Log
+	- 日志
+	- 把日志写到磁盘上
+	- logging模块
+	- 日志相关概念
+		- 级别
+			- 不同的的用户关注不同的信息
+			- DEBUG
+			- INFO
+			- NOTICE
+			- WARNIBG
+			- ERROR	到该级别，介入
+			- CRITICAL	程序停止
+			- ALERT
+			- EMERGENCY
+	- Log的作用
+		- 调试
+		- 了解软件的运行状况
+		- 确定问题
+	- 日志信息
+		- time时间
+		- 哪个类，地点
+		- 级别level
+		- 内容，错误内容
+	- 第三方日志
+		- log4j
+		- log4php
+		- logging
+	- Logging模块
+		- 初始化/日志需要制定级别
+		- 使用方式
+			- logging，封装了其他的组件
+			- loging四大组件
+	- logging模块级别日志
+		- logging.debug(msg,\*args,**kwargs)创建一条严重级别为debug的日志
+		- logging.info(msg,\*args,**kwargs)创建一条严重级别为info的日志
+		- logging.warning(msg,\*args,**kwargs)创建一条严重级别为warning的日志
+		- logging.error(msg,\*args,**kwargs)创建一条严重级别为error的日志
+		- logging.critical(msg,\*args,**kwargs)创建一条严重级别为critical的日志
+		- logging.log可以替代上边的五种日志
+		- logging.log(level,\*args,**kwargs)创建一条严重级别为level的日志
+		- logging.basicConfig(**kwargs)对root logger进行一次性配置
+			- 只在第一次配置的时候起作用
+			- 不配置logger使用默认信息
+				- 输出sys.stderr
+				- 级别WARNING
+				- 格式level:log_name:content
 
-
-
-
-
-
-
-
+		- 不进行配置的时候，低于warning级别的警告是不会显示
+		- 两种用法如下，配置文件的设置可以设置log输出的文件，和log的级别，默认的级别的warning
+		<pre>
+		import logging
+		logging.basicConfig(filename='python.log',level=logging.DEBUG)
+		logging.debug('0this is debug')
+		logging.info('0this is info')
+		logging.warning('0this is warning')
+		logging.error('0this is error')
+		logging.critical('0this is critical')
+		logging.log(logging.DEBUG,'this is debug')
+		logging.log(logging.INFO,'this is info')
+		logging.log(logging.WARNING,'this is warning')
+		logging.log(logging.ERROR,'this is error')
+		logging.log(logging.CRITICAL,'this is critical')
+		</pre>
+		- 自定义配置
+		- Log_config="%(asctime)s====%(levelname)s++++%(message)s"里边的格式是basicConfig的配置参数定义的格式
+		<pre>
+		import logging
+		Log_config="%(asctime)s====%(levelname)s++++%(message)s"
+		logging.basicConfig(filename='python.log',level=logging.DEBUG,format=Log_config)
+		logging.debug('0this is debug')
+		logging.info('0this is info')
+		logging.warning('0this is warning')
+		logging.error('0this is error')
+		logging.critical('0this is critical')
+		logging.log(logging.DEBUG,'this is debug')
+		logging.log(logging.INFO,'this is info')
+		logging.log(logging.WARNING,'this is warning')
+		logging.log(logging.ERROR,'this is error')
+		logging.log(logging.CRITICAL,'this is critical')
+		</pre>
+		- basicConfig的format的参数参数有多个
+	- logging默认的处理流程
+		- 四大组件
+			- 日志器(Logger)：生产日期的接口
+			- 处理器(Handler)：把产生的日志放到相应的目的地
+			- 过滤器(Filter):更精细的控制日志
+			- 格式器(Formatter)：对输出的信息进行格式化
+		- 四大组件的整合
+			- 出现的告警信息太多，会直接保存到本地，然后发送到相应的人和位置；
+			- 四大组件的作用是把相应的数据做相应的处理，然后把信息发送给相应的对象(让该看到的人看到该看到的信息)
+		- Logger
+			- 产生一个日志
+			- 操作
+				- Logger.setLevel()设置日志的需要处理的最低级别
+				- Logger.addHandler(),Logger.removeHander()添加和移除处理器
+				- Logger.addFilter(),Logger.removeFilter()添加和移除过滤器
+				- Logger.debug()产生一个debug级别的日志
+				- Logger.exception()创建类似于Logger.error的日志消息
+				- Logger.log()获取一个明确的日志level参数类创建一个日志
+			- 如何得到一个logger，产生一个日志
+				- 实例化
+				- logging.getLogger()
+		- Handler
+			- 把log发送到指定的位置
+			- 方法
+				- setLevel设置界别
+				- serFormat设置参数，即为日志的格式
+				- addFilter,removeFilter删除或是添加顾虑器
+			- 不需要直接使用，Handler是基类
+		- Format类
+			- 直接实例化
+			- 可以继承Format添加特殊内容
+			- 三个参数
+		- Filter类
+			- 可以被Hander和Logger使用
+			- 控制传递过来的具体内容
+	- 案例待补充......
+#### 多线程 ####
+- 多线程 VS 多进程
+	- 进程：程序运行的一种状态
+		- 包含地址空间、内存、数据栈
+		- 每个进程有一个单独的运行环境，过个运行程序之间互不干扰。
+	- 线程
+		- 一个进程的独立运行的片段，一个进程可以由多个片段组成（一个进程有多个线程）
+		- 轻量化的进程
+		- 共享互斥问题
+	- 全局解释器锁 
+	- python的伪多线程
+		- 多线程是指一个程序中多个代码片段相互运行互不干扰
+			- 举例：厨房中两个人同时在做饭，做饭的工具需要有两套，互不干扰
+		- 伪多线程是也是指一个程序中多个代码片段运行互不干扰，但是要有一定的条件
+			- 举例：厨房中两个人同时在做饭，但是做饭的工具只有一套，两个人在做饭的时候使用的工具就会有冲突，需要岔开使用，在此条件上互不干扰
 
 
 
