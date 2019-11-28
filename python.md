@@ -2491,7 +2491,71 @@
 			- 举例：厨房中两个人同时在做饭，做饭的工具需要有两套，互不干扰
 		- 伪多线程是也是指一个程序中多个代码片段运行互不干扰，但是要有一定的条件
 			- 举例：厨房中两个人同时在做饭，但是做饭的工具只有一套，两个人在做饭的时候使用的工具就会有冲突，需要岔开使用，在此条件上互不干扰
-
+	- python
+		- thread有问题，不好用，python3中改成了_thread
+		- threading,一般用这个包
+		- 使用
+			- 案例，不使用多线程
+			<pre>
+			import time			
+			def loop1():
+			    print('time01', time.ctime())
+			    time.sleep(4)
+			    print('time01', time.ctime())			
+			def loop2():
+			    print('time02', time.ctime())
+			    time.sleep(4)
+			    print('time02', time.ctime())			 
+			def main():
+			    print('main-time', time.ctime())
+			    loop1()
+			    loop2()
+			    print('main-time', time.ctime())			
+			main()
+			</pre>
+			- 案例，使用thread
+				- 出现的问题是，在main方法中分出去的两个线程，分别执行相应从程序后，里边有延时装置的时候，延时装置后边的代码会被停掉，也就是print('loop1-02:', time.ctime())和print('loop2-02:', time.ctime())不会被执行
+			<pre>
+			import _thread as thread
+			import time			
+			def loop1():
+			    print('loop1-01:', time.ctime())
+			    time.sleep(4)
+			    print('loop1-02:', time.ctime())			
+			def loop2():
+			    print('loop2-01:', time.ctime())
+			    time.sleep(4)
+			    print('loop2-02:', time.ctime())			
+			def main():
+			    print('main01:', time.ctime())
+			    thread.start_new_thread(loop1,()) #方法、方法的参数
+			    thread.start_new_thread(loop2,())
+			    print('main02:', time.ctime())			
+			main()
+			</pre>
+			- 案例，解决上边的为题
+				- 代码中的演示器会被结束，是因为主线程已经结束，解决办法是，让主线程实时监测，如果没有执行完的代码，要实时监测执行
+			<pre>
+			import _thread as thread
+			import time			
+			def loop1():
+			    print('loop1-01:', time.ctime())
+			    time.sleep(4)
+			    print('loop1-02:', time.ctime())			
+			def loop2():
+			    print('loop2-01:', time.ctime())
+			    time.sleep(4)
+			    print('loop2-02:', time.ctime())			
+			def main():
+			    print('main01:', time.ctime())
+			    thread.start_new_thread(loop1,()) #方法、方法的参数
+			    thread.start_new_thread(loop2,())
+			    print('main02:', time.ctime())			
+			if __name__=='__main__':
+			    main()
+			    while True:
+			        time.sleep(1)
+			</pre>
 
 
 
